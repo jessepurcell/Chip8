@@ -27,6 +27,7 @@ void Chip8::Decode()
 {
 	bit16 instruction = memory.GetByte(cpu.PC) << 8 | memory.GetByte(cpu.PC + 1);
 	bit16 opcode = instruction >> 12;
+	//
 	//opcode << memory.GetByte(cpu.PC);
 	//opcode << memory.GetByte(cpu.PC + 1);
 }
