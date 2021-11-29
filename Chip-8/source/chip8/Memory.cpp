@@ -2,7 +2,7 @@
 
 Memory::Memory()
 {
-	for (int i = 0; i < BLOCKS; i++)
+	for (int i = 0; i < MEM_SIZE; i++)
 	{
 		data[i] = 0x00000000;
 	}

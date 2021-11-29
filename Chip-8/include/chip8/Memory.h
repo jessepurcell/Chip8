@@ -1,14 +1,13 @@
 #pragma once
 #include <chip8/Data.h>
 
-#define MEM_SIZE 4096
-#define BLOCKS (MEM_SIZE / sizeof(bit8))
+#define MEM_SIZE 0x1000
 
 class Memory
 {
 private:
 	//Set memory to 4kb
-	bit8 data[BLOCKS];
+	bit8 data[MEM_SIZE];
 public:
 	Memory();
 	~Memory();

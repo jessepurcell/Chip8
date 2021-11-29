@@ -13,6 +13,14 @@ public:
 	void Initialize();
 	void Clock();
 
+	bit16 Fetch();
 	void Decode();
 	void Execute();
+
+
+
+	bit16 GetInstruction();
+	bit8 GetOpcode();
+	bit8 GetArg1();
+	bit8 GetArg2();
 };
