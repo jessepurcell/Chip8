@@ -24,7 +24,7 @@ void CPU::Initialize()
 
 	for (int i = 0; i < 64 * 32; i++)
 	{
-		video[i] = false;
+		video[i] = 0;
 	}
 
 	opcode = 0xFFFF;
@@ -133,13 +133,13 @@ void CPU::Cycle()
 void CPU::Fetch()
 {
 	opcode = memory.GetByte(PC) << 8 | memory.GetByte(PC + 1);
-	printf("OPCODE 0x%08X \n", opcode);
+	printf("OPCODE 0x%04X \n", opcode);
 	PC += 2;
 }
 
 void CPU::OP_NULL()
 {
-	printf("Invalid OPCODE 0x%08X", opcode);
+	printf("Invalid OPCODE 0x%04X", opcode);
 }
 
 void CPU::OP_00E0()
@@ -313,24 +313,24 @@ void CPU::OP_Dxyn()
 	bit8 height = opcode & 0x000F;
 
 	//% video width and height to wrap 
-	bit8 xPos = V[x];
-	bit8 yPos = V[y];
+	uint8_t xPos = V[x] % 64;
+	uint8_t yPos = V[y] % 32;
 
 	V[0xF] = 0;
 
 	for (int row = 0; row < height; row++)
 	{
-		bit8 spriteByte = memory.GetByte(I + row);
+		uint8_t spriteByte = memory.GetByte(I + row);
 
-		for (int col = 0; col < 8; col++)
+		for (unsigned int col = 0; col < 8; col++)
 		{
-			bit8 spritePixel = spriteByte & 0x80 >> col;
-			int screenPixel = video[yPos + row] + (xPos + col);
+			uint8_t spritePixel = spriteByte & 0x80 >> col;
+			uint32_t* screenPixel = &video[(yPos + row) * 64 + (xPos + col)];
 
 			if (spritePixel)
 			{
-				if (screenPixel == 0xFFFFFFFF) V[x] = 1;
-				screenPixel ^= 0xFFFFFFFF;
+				if (*screenPixel == 0xFFFFFFFF) V[x] = 1;
+				*screenPixel ^= 0xFFFFFFFF;
 			}
 		}
 	}

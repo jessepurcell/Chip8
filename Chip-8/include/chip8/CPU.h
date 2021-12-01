@@ -7,6 +7,7 @@
 #include <chip8/Memory.h>
 
 #define FONTSET_SIZE 80
+#define SCREEN_WIDTH 64
 
 class CPU
 {
@@ -54,7 +55,7 @@ private:
 	std::mt19937 rng;
 	std::uniform_int_distribution<> dist;
 public:
-	bool video[64 * 32];
+	uint32_t video[64 * 32];
 public:
 	void Initialize();
 	void LoadROM(char const* filename);
