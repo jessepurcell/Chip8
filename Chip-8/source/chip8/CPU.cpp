@@ -308,28 +308,35 @@ void CPU::OP_Cxkk()
 //Doubt this works lol
 void CPU::OP_Dxyn()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00F0 >> 4;
-	bit8 height = opcode & 0x000F;
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	uint8_t height = opcode & 0x000Fu;
 
-	//% video width and height to wrap 
-	uint8_t xPos = V[x] % 64;
-	uint8_t yPos = V[y] % 32;
+	// Wrap if going beyond screen boundaries
+	uint8_t xPos = V[Vx] % 64;
+	uint8_t yPos = V[Vy] % 32;
 
 	V[0xF] = 0;
 
-	for (int row = 0; row < height; row++)
+	for (unsigned int row = 0; row < height; ++row)
 	{
 		uint8_t spriteByte = memory.GetByte(I + row);
 
-		for (unsigned int col = 0; col < 8; col++)
+		for (unsigned int col = 0; col < 8; ++col)
 		{
-			uint8_t spritePixel = spriteByte & 0x80 >> col;
+			uint8_t spritePixel = spriteByte & (0x80u >> col);
 			uint32_t* screenPixel = &video[(yPos + row) * 64 + (xPos + col)];
 
+			// Sprite pixel is on
 			if (spritePixel)
 			{
-				if (*screenPixel == 0xFFFFFFFF) V[x] = 1;
+				// Screen pixel also on - collision
+				if (*screenPixel == 0xFFFFFFFF)
+				{
+					V[0xF] = 1;
+				}
+
+				// Effectively XOR with the sprite pixel
 				*screenPixel ^= 0xFFFFFFFF;
 			}
 		}

@@ -32,14 +32,6 @@ int main()
     sf::Texture texture;
     texture.create(64, 32);
     sf::Sprite sprite(texture);
-    for (int i = 0; i < 64 * 32 * 4; i += 4)
-    {
-        pixels[i] = 0;//red;
-        pixels[i + 1] = 00; //red;
-        pixels[i + 2] = 0;//red;
-        pixels[i + 3] = 255;//red;
-    }
-    texture.update(pixels);
 
     while (window.isOpen())
     {
@@ -55,8 +47,8 @@ int main()
         for (int i = 0; i < 64 * 32 * 4; i += 4)
         {
             pixels[i] = 0;//red;
-            pixels[i + 1] = cpu->video[i/4] * 255; //green;
-            pixels[i + 2] = 0;//blue;
+            pixels[i + 1] = (bit8)cpu->video[i/4] ? 255 : 0; //green;
+            pixels[i + 2] = 155;//blue;
             pixels[i + 3] = 255;//alpha;
         }
         texture.update(pixels);
