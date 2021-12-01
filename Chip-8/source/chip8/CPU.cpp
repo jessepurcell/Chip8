@@ -308,13 +308,13 @@ void CPU::OP_Cxkk()
 //Doubt this works lol
 void CPU::OP_Dxyn()
 {
-	bit8 Vx = (opcode & 0x0F00u) >> 8u;
-	bit8 Vy = (opcode & 0x00F0u) >> 4u;
-	bit8 height = opcode & 0x000Fu;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
+	bit8 height = opcode & 0x000F;
 
 	// Wrap if going beyond screen boundaries
-	bit8 xPos = V[Vx] % 64;
-	bit8 yPos = V[Vy] % 32;
+	bit8 xPos = V[x] % 64;
+	bit8 yPos = V[y] % 32;
 
 	V[0xF] = 0;
 
@@ -324,19 +324,16 @@ void CPU::OP_Dxyn()
 
 		for (unsigned int col = 0; col < 8; ++col)
 		{
-			bit8 spritePixel = spriteByte & (0x80u >> col);
+			bit8 spritePixel = spriteByte & (0x80 >> col);
 			uint32_t* screenPixel = &video[(yPos + row) * 64 + (xPos + col)];
 
-			// Sprite pixel is on
 			if (spritePixel)
 			{
-				// Screen pixel also on - collision
 				if (*screenPixel == 0xFFFFFFFF)
 				{
 					V[0xF] = 1;
 				}
 
-				// Effectively XOR with the sprite pixel
 				*screenPixel ^= 0xFFFFFFFF;
 			}
 		}

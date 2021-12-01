@@ -13,6 +13,8 @@ int main()
 	return 0;
 }*/
 
+#include <thread>
+
 #include <chip8/CPU.h>
 #include <SFML/Graphics.hpp>
 
@@ -22,7 +24,7 @@ int main()
 {
     CPU* cpu = new CPU();
     cpu->Initialize();
-    cpu->LoadROM("C:\\Users\\slayd\\source\\repos\\Miosyo\\Emulators\\Chip-8\\roms\\programs\\chip8-test-rom.ch8");
+    cpu->LoadROM("C:\\Users\\slayd\\source\\repos\\Miosyo\\Emulators\\Chip-8\\roms\\programs\\test_opcode.ch8");
 
     sf::RenderWindow window(sf::VideoMode(64 * SCALE, 32 * SCALE), "Chip-8");
     sf::RenderTexture renderTexture;
@@ -32,6 +34,8 @@ int main()
     sf::Texture texture;
     texture.create(64, 32);
     sf::Sprite sprite(texture);
+
+    window.setFramerateLimit(1);
 
     while (window.isOpen())
     {
