@@ -4,7 +4,7 @@ Memory::Memory()
 {
 	for (int i = 0; i < MEM_SIZE; i++)
 	{
-		data[i] = 0x00000000;
+		data[i] = 0x0000;
 	}
 }
 

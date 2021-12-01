@@ -1,11 +1,15 @@
-#include <chip8/Chip8.h>
+#include <chip8/CPU.h>
 
 int main()
 {
-	Chip8 chip8 = Chip8();
+	CPU *cpu = new CPU();
+	cpu->Initialize();
+	cpu->LoadROM("C:\\Users\\slayd\\source\\repos\\Miosyo\\Emulators\\Chip-8\\roms\\demos\\Maze [David Winter, 199x].ch8");
+
 	while (true)
 	{
-		chip8.Clock();
+		cpu->Cycle();
 	}
+	delete cpu;
 	return 0;
 }
