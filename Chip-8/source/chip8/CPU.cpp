@@ -17,7 +17,7 @@ void CPU::Initialize()
 
 	for (int i = 0; i < FONTSET_SIZE; i++)
 	{
-		memory.SetByte(0x80 + i, fontset[i]);
+		memory.SetByte(0x50 + i, fontset[i]);
 	}
 
 	LoadOpcodes();
@@ -27,7 +27,7 @@ void CPU::Initialize()
 		video[i] = 0;
 	}
 
-	opcode = 0xFFFF;
+	opcode = 0x1200;
 
 	rng = std::mt19937(std::random_device{}());
 	dist = std::uniform_int_distribution<>(0, 255);
@@ -172,82 +172,82 @@ void CPU::OP_2nnn()
 
 void CPU::OP_3xkk()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 byte = opcode & 0x00FF;
 	if (V[x] == byte) PC += 2;
 }
 
 void CPU::OP_4xkk()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 byte = opcode & 0x00FF;
 	if (V[x] != byte) PC += 2;
 }
 
 void CPU::OP_5xy0()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	if (V[x] == V[y]) PC += 2;
 }
 
 void CPU::OP_6xkk()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 byte = opcode & 0x00FF;
 	V[x] = byte;
 }
 
 void CPU::OP_7xkk()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 byte = opcode & 0x00FF;
 	V[x] += byte;
 }
 
 void CPU::OP_8xy0()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	V[x] = V[y];
 }
 
 void CPU::OP_8xy1()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	V[x] |= V[y];
 }
 
 void CPU::OP_8xy2()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	V[x] &= V[y];
 }
 
 void CPU::OP_8xy3()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	V[x] ^= V[y];
 }
 
 void CPU::OP_8xy4()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 
 	bit16 sum = V[x] + V[y];
-	if (sum > 0xFF) V[0xF] = 0x1;
+	if (sum > 255) V[0xF] = 0x1;
 	else V[0xF] = 0x0;
 	V[x] = sum & 0xFF;
 }
 
 void CPU::OP_8xy5()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	if (V[x] > V[y]) V[0xF] = 1;
 	else V[0xF] = 0;
 	V[x] -= V[y];
@@ -255,15 +255,15 @@ void CPU::OP_8xy5()
 
 void CPU::OP_8xy6()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	V[0xF] = V[x] & 0x1;
 	V[x] >>= 1;
 }
 
 void CPU::OP_8xy7()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	if (V[y] > V[x]) V[0xF] = 1;
 	else V[0xF] = 0;
 	V[x] = V[y] - V[x];
@@ -271,15 +271,15 @@ void CPU::OP_8xy7()
 
 void CPU::OP_8xyE()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	V[0xF] = V[x] & 0x80 >> 7;
 	V[x] <<= 1;
 }
 
 void CPU::OP_9xy0()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
-	bit8 y = opcode & 0x00FF >> 4;
+	bit8 x = (opcode & 0x0F00) >> 8;
+	bit8 y = (opcode & 0x00F0) >> 4;
 	if (V[x] != V[y]) PC += 2;
 }
 
@@ -297,7 +297,7 @@ void CPU::OP_Bnnn()
 
 void CPU::OP_Cxkk()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 byte = opcode & 0x00FF;
 
 	//To-Do: Random number gen
@@ -310,15 +310,14 @@ void CPU::OP_Dxyn()
 {
 	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 y = (opcode & 0x00F0) >> 4;
-	bit8 height = opcode & 0x000F;
+	bit8 n = opcode & 0x000F;
 
-	// Wrap if going beyond screen boundaries
-	bit8 xPos = V[x] % 64;
-	bit8 yPos = V[y] % 32;
+	bit8 xPos = V[x];// % 64;
+	bit8 yPos = V[y];// % 32;
 
 	V[0xF] = 0;
 
-	for (unsigned int row = 0; row < height; ++row)
+	for (int row = 0; row < n; ++row)
 	{
 		bit8 spriteByte = memory.GetByte(I + row);
 
@@ -342,27 +341,27 @@ void CPU::OP_Dxyn()
 
 void CPU::OP_Ex9E()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 key = V[x];
 	if (keypad[key]) PC += 2;
 }
 
 void CPU::OP_ExA1()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 key = V[x];
 	if (!keypad[key]) PC += 2;
 }
 
 void CPU::OP_Fx07()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	V[x] = delay;
 }
 
 void CPU::OP_Fx0A()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 
 	bool y = false;
 	for (int i = 0; i < 16; i++)
@@ -378,32 +377,32 @@ void CPU::OP_Fx0A()
 
 void CPU::OP_Fx15()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	delay = V[x];
 }
 
 void CPU::OP_Fx18()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	sound = V[x];
 }
 
 void CPU::OP_Fx1E()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	I += V[x];
 }
 
 void CPU::OP_Fx29()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 digit = V[x];
 	I = 0x50 + (5 * digit);
 }
 
 void CPU::OP_Fx33()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 	bit8 value = V[x];
 
 	memory.SetByte(I + 2, value % 10);
@@ -417,9 +416,8 @@ void CPU::OP_Fx33()
 
 void CPU::OP_Fx55()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 
-	//This might need to be ++i NOT i++
 	for (int i = 0; i < x; i++)
 	{
 		memory.SetByte(I + i, V[i]);
@@ -428,7 +426,7 @@ void CPU::OP_Fx55()
 
 void CPU::OP_Fx65()
 {
-	bit8 x = opcode & 0x0F00 >> 8;
+	bit8 x = (opcode & 0x0F00) >> 8;
 
 	for (int i = 0; i < x; i++)
 	{

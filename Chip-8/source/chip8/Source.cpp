@@ -18,13 +18,13 @@ int main()
 #include <chip8/CPU.h>
 #include <SFML/Graphics.hpp>
 
-#define SCALE 16
+#define SCALE 32
 
 int main()
 {
     CPU* cpu = new CPU();
     cpu->Initialize();
-    cpu->LoadROM("C:\\Users\\slayd\\source\\repos\\Miosyo\\Emulators\\Chip-8\\roms\\programs\\test_opcode.ch8");
+    cpu->LoadROM("C:\\Users\\slayd\\source\\repos\\Miosyo\\Emulators\\Chip-8\\roms\\programs\\BMP Viewer - Hello (C8 example) [Hap, 2005].ch8");
 
     sf::RenderWindow window(sf::VideoMode(64 * SCALE, 32 * SCALE), "Chip-8");
     sf::RenderTexture renderTexture;
@@ -35,7 +35,8 @@ int main()
     texture.create(64, 32);
     sf::Sprite sprite(texture);
 
-    window.setFramerateLimit(1);
+    //Sets emulator to run at 60hz
+    window.setFramerateLimit(60);
 
     while (window.isOpen())
     {
@@ -50,9 +51,9 @@ int main()
 
         for (int i = 0; i < 64 * 32 * 4; i += 4)
         {
-            pixels[i] = 0;//red;
-            pixels[i + 1] = (bit8)cpu->video[i/4] ? 255 : 0; //green;
-            pixels[i + 2] = 155;//blue;
+            pixels[i] = (bit8)cpu->video[i / 4] ? 120 : 33;//red;
+            pixels[i + 1] = (bit8)cpu->video[i/4] ? 200 : 33; //green;
+            pixels[i + 2] = (bit8)cpu->video[i / 4] ? 120 : 150;//blue;
             pixels[i + 3] = 255;//alpha;
         }
         texture.update(pixels);
