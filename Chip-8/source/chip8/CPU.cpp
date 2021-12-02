@@ -337,6 +337,7 @@ void CPU::OP_Dxyn()
 			}
 		}
 	}
+	draw = true;
 }
 
 void CPU::OP_Ex9E()

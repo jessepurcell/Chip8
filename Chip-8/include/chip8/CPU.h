@@ -14,14 +14,11 @@ class CPU
 private:
 	bit8 V[16];
 	bit16 I;
-	bit8 sound;
 	bit8 delay;
 	bit16 PC;
 	bit8 SP;
 	bit16 stack[16];
 	Memory memory;
-
-	bool keypad[16];
 
 	bit8 fontset[FONTSET_SIZE] =
 	{
@@ -56,6 +53,9 @@ private:
 	std::uniform_int_distribution<> dist;
 public:
 	uint32_t video[64 * 32];
+	bit8 sound;
+	bool keypad[16];
+	bool draw = false;
 public:
 	void Initialize();
 	void LoadROM(char const* filename);
